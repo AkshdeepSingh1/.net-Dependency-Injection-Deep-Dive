@@ -1,0 +1,137 @@
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
+@{
+
+    ViewData["Title"] = "Home Page";
+
+    var scope_1 = ViewBag.scope_1;
+    var scope_2 = ViewBag.scope_2;
+    var transient_1 = ViewBag.transient_1;
+    var transient_2 = ViewBag.transient_2;
+    var singleton_1 = ViewBag.singleton_1;
+    var singleton_2 = ViewBag.singleton_2;
+    var keyedServiceA_Implementation = ViewBag.keyedServiceA_Implementation;
+    var keyedServiceB_Implementation = ViewBag.keyedServiceB_Implementation;
+    var weatherService = ViewBag.weatherService;
+    var useFakeWeatherService = Configuration["UseFakeWeatherService"]?.ToLower() == "true";
+    var envService = ViewBag.envService;
+
+}
+
+<div class="text-center py-4">
+    <h1 class="display-4">Dependency Injection: Deep Dive</h1>
+
+</div>
+
+<div>
+
+    <!-- Section 1: Dependency Injection Lifetimes -->
+    <h2>Dependency Injection Lifetimes</h2>
+    <p>
+        This section demonstrates the different lifetimes provided by Dependency Injection in ASP.NET Core.
+        For each lifetime type (Scoped, Transient, Singleton), two instances are created.
+        Refresh the page and notice how the values change to reflect the lifecycle behavior.
+    </p>
+
+    <!-- Scoped Lifetimes -->
+    <h3>Scoped Instances</h3>
+    <p>
+        Scoped 1: <strong>@scope_1</strong><br />
+        Scoped 2: <strong>@scope_2</strong>
+    </p>
+
+    <!-- Transient Lifetimes -->
+    <h3>Transient Instances</h3>
+    <p>
+        Transient 1: <strong>@transient_1</strong><br />
+        Transient 2: <strong>@transient_2</strong>
+    </p>
+
+    <!-- Singleton Lifetimes -->
+    <h3>Singleton Instances</h3>
+    <p>
+        Singleton 1: <strong>@singleton_1</strong><br />
+        Singleton 2: <strong>@singleton_2</strong>
+    </p>
+
+
+    <h2>Conditionally Registered Services</h2>
+
+    <p>
+        This section demonstrates the concept of conditionally registering services based on configuration settings.
+        Depending on the configuration, the application uses either a Fake Weather Service (for testing) or a Real Weather Service (for production).
+    </p>
+
+    <p>
+        Weather Information:
+        @if (useFakeWeatherService)
+        {
+            <strong>Fake Weather Service:</strong> @weatherService.GetWeatherInfo()
+            <span class="text-muted small">(Switch to a real service by changing the <code>UseFakeWeatherService</code> configuration in <code>appsettings.json</code> to <code>false</code>)</span>
+        }
+        else
+        {
+            <strong>Real Weather Service:</strong> @weatherService.GetWeatherInfo()
+            <span class="text-muted small">(Switch to a fake service by changing the <code>UseFakeWeatherService</code> configuration in <code>appsettings.json</code> to <code>true</code>)</span>
+        }
+    </p>
+
+    <h2 class="runtime">Runtime Environment-based Services</h2>
+    <p>
+        Register services based on the runtime environment. This section demonstrates registering services based on the environment.
+        Services are registered differently for different Enviornment to aid in debugging and testing and buissness logic.
+    </p>
+        <div>
+            <p>
+                 Env Service : @envService.getData()
+            </p>
+
+        </div>
+
+    <!-- Section 2: Named or Keyed Services -->
+    <h2>Named or Keyed Services</h2>
+    <p>
+        This section illustrates the usage of named or keyed registrations in Dependency Injection.
+        Two implementations of the same interface are registered, and on runtime, the application decides
+        which implementation to use based on the provided key.
+    </p>
+
+    <!-- Keyed Implementations -->
+    <h3>Keyed Implementations</h3>
+    <p>
+        KeyedServiceA_Implementation: @keyedServiceA_Implementation.<br />
+        KeyedServiceB_Implementation: @keyedServiceB_Implementation.
+    </p>
+</div>
+
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+        background-color: #f9f9f9;
+        margin: 20px;
+    }
+
+    h2 {
+        color: #2d3e50;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 5px;
+    }
+
+    h3 {
+        color: #3498db;
+    }
+
+    p {
+        margin: 10px 0;
+    }
+
+    strong {
+        color: #e74c3c;
+    }
+
+    hr {
+        border-top: 1px solid #ccc;
+        margin: 20px 0;
+    }
+</style>
